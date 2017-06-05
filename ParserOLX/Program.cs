@@ -12,13 +12,20 @@ namespace ParserOLX
     class Program
     {
 
-        static string _urlToLoad = "https://www.olx.ua/obyavlenie/1-komn-vavilova-startovye-tseny-ot-zastroyschika-ID9027J.html";
-        static string getPhoneBaseString = "https://www.olx.ua/ajax/misc/contact/phone/njBuq/";
+        static string _urlToLoad =// "https://www.olx.ua/obyavlenie/2-komn-zhk-omega-ot-sk-budova-krasivyy-vid-na-more-i-gorod-IDnjBuq.html";
+                                     "https://www.olx.ua/obyavlenie/1-komn-vavilova-startovye-tseny-ot-zastroyschika-ID9027J.html";
+        static string getPhoneBaseString = "https://www.olx.ua/ajax/misc/contact/phone/";// njBuq/";
 
         static void Main(string[] args)
         {
-            
-            List<string> phones = GetPhone(_urlToLoad);
+          
+            int index = _urlToLoad.IndexOf("ID") + "ID".Length;
+            string idString = _urlToLoad.Substring(index  , _urlToLoad.Length-index);
+            string[] idNum = idString.Split('.');
+            string id = idNum[0];
+
+
+            List<string> phones = GetPhone(_urlToLoad,id);
 
             foreach(string item in phones)
             {
@@ -28,9 +35,7 @@ namespace ParserOLX
             Console.ReadLine();
         }
 
-
-
-        static List<string> GetPhone(String urlToLoad)
+        static List<string> GetPhone(String urlToLoad, string id_)
         {
             List<string> phonesList = new List<string>();
             string pt = string.Empty;
@@ -75,7 +80,7 @@ namespace ParserOLX
           
                 
                 //  https://www.olx.ua/obyavlenie/1-komn-vavilova-startovye-tseny-ot-zastroyschika-ID9027J.html
-                string getPhoneString = String.Concat(getPhoneBaseString, "?pt=", pt);
+                string getPhoneString = String.Concat(getPhoneBaseString,id_,"/", "?pt=", pt);
 
                 HttpWebRequest phoneRequest = HttpWebRequest.Create(getPhoneString) as HttpWebRequest;
                 phoneRequest.Method = "GET";
