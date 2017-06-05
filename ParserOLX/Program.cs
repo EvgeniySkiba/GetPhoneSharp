@@ -14,18 +14,11 @@ namespace ParserOLX
 
         static string _urlToLoad =// "https://www.olx.ua/obyavlenie/2-komn-zhk-omega-ot-sk-budova-krasivyy-vid-na-more-i-gorod-IDnjBuq.html";
                                      "https://www.olx.ua/obyavlenie/1-komn-vavilova-startovye-tseny-ot-zastroyschika-ID9027J.html";
-        static string getPhoneBaseString = "https://www.olx.ua/ajax/misc/contact/phone/";// njBuq/";
+     
 
         static void Main(string[] args)
-        {
-          
-            int index = _urlToLoad.IndexOf("ID") + "ID".Length;
-            string idString = _urlToLoad.Substring(index  , _urlToLoad.Length-index);
-            string[] idNum = idString.Split('.');
-            string id = idNum[0];
-
-
-            List<string> phones = GetPhone(_urlToLoad,id);
+        {  
+            List<string> phones = GetPhone(_urlToLoad);
 
             foreach(string item in phones)
             {
@@ -35,11 +28,17 @@ namespace ParserOLX
             Console.ReadLine();
         }
 
-        static List<string> GetPhone(String urlToLoad, string id_)
+        static List<string> GetPhone(String urlToLoad)
         {
+            const string getPhoneBaseString = "https://www.olx.ua/ajax/misc/contact/phone/";
             List<string> phonesList = new List<string>();
             string pt = string.Empty;
 
+            int index = _urlToLoad.IndexOf("ID") + "ID".Length;
+            string idString = _urlToLoad.Substring(index, _urlToLoad.Length - index);
+            string[] idNum = idString.Split('.');
+            string id_ = idNum[0];
+            
             HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.OptionFixNestedTags = true;
 
@@ -76,8 +75,7 @@ namespace ParserOLX
                 }
 
                 string[] array = urlToLoad.Split('#');
-                string referString = array[0];
-          
+                string referString = array[0];          
                 
                 //  https://www.olx.ua/obyavlenie/1-komn-vavilova-startovye-tseny-ot-zastroyschika-ID9027J.html
                 string getPhoneString = String.Concat(getPhoneBaseString,id_,"/", "?pt=", pt);
@@ -102,7 +100,6 @@ namespace ParserOLX
                 // Report the number of matches found.
                 int noOfMatches = matches.Count;
                 // Report on each match.
-
 
                 foreach (Match match in matches)
                 {
